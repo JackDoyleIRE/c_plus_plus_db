@@ -3,14 +3,16 @@
 
 #include <string>
 
+using std::string;
+
 class Storage {
 public:
-    Storage(const std::string& filename);
-    void insertRow(const std::string& data);
-    std::string readRow(int rowId);
+    Storage(const string& filename);
+    void insertRow(const string& data);
+    string readRow(int rowId);
 
 private:
-    std::string filename;
+    string filename;
 };
 
 #endif
