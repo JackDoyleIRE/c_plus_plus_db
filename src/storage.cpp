@@ -34,3 +34,19 @@ int Storage::insertRow(const std::vector<std::string>& rowData) {
     return 1;  // Return 1 row inserted for row count
 }
 
+// New function to show all rows from the database
+void Storage::showAllRows() const {
+    std::ifstream file(filename);
+    string line;
+
+    std::cout << "Rows in the database:\n";
+    if (file.is_open()) {
+        while (getline(file, line)) {
+            std::cout << line << "\n";  // Output each line in the file
+        }
+        file.close();
+    } else {
+        std::cerr << "Error opening file for reading\n";
+    }
+}
+
