@@ -1,16 +1,16 @@
 #include "storage.h"
 #include <iostream>
 
+using std::cout;
+using std::vector;
+using std::string;
+
 int main() {
     Storage storage("data.db");
 
-    // Example: Insert a row
-    storage.insertRow("This is a test row");
-
-    // Example: Read a row
-    std::string row = storage.readRow(0);
-    std::cout << "Read row: " << row << std::endl;
+    // Insert a couple of rows
+    storage.insertRow({"John", "Doe", "30"});
+    storage.insertRow({"Jane", "Smith", "25"});
 
     return 0;
 }
-
