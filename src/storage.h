@@ -14,6 +14,7 @@ public:
     int insertRow(const vector<string>& rowData);  // Return number of rows inserted
     vector<string> readRow(int rowId) const;
     void showAllRows() const;  // New method to show all rows
+    int getTotalRows() const;  // Add method to return total row count
 
 private:
     string filename;

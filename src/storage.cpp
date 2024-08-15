@@ -6,7 +6,37 @@ using std::ofstream;
 using std::ios;
 
 Storage::Storage(const std::string& filename) : filename(filename) {
-    // Optionally load existing data from the file here
+    // Load existing rows from the file into the in-memory table
+    // Load existing rows from the file into the in-memory table
+    std::ifstream file(filename);
+    string line;
+
+    if (file.is_open()) {
+        while (getline(file, line)) {
+            vector<string> rowData;
+            string cell;
+            // Split the line into columns (assuming space-separated values for simplicity)
+            for (char c : line) {
+                if (c == ' ') {
+                    if (!cell.empty()) {
+                        rowData.push_back(cell);
+                        cell.clear();
+                    }
+                } else {
+                    cell += c;
+                }
+            }
+            if (!cell.empty()) {
+                rowData.push_back(cell);
+            }
+
+            // Add row to the in-memory table
+            if (!rowData.empty()) {
+                table.push_back(rowData);
+            }
+        }
+        file.close();
+    }
 }
 
 int Storage::insertRow(const std::vector<std::string>& rowData) {
@@ -48,5 +78,11 @@ void Storage::showAllRows() const {
     } else {
         std::cerr << "Error opening file for reading\n";
     }
+}
+
+// New method to get the total number of rows
+int Storage::getTotalRows() const {
+    return table.size();  // Return the number of rows in the in-memory table
+
 }
 
