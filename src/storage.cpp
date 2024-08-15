@@ -9,8 +9,15 @@ Storage::Storage(const std::string& filename) : filename(filename) {
     // Optionally load existing data from the file here
 }
 
-void Storage::insertRow(const std::vector<std::string>& rowData) {
+int Storage::insertRow(const std::vector<std::string>& rowData) {
     table.push_back(rowData);  // Add the row to the table
+
+    // Debug print to check rowData
+    std::cout << "Inserting row: ";
+    for (const auto& data : rowData) {
+        std::cout << data << " ";
+    }
+    std::cout << std::endl;
 
     // Optionally write to the file to persist the new row
     ofstream file(filename, ios::app);  // Open the file in append mode
@@ -24,6 +31,6 @@ void Storage::insertRow(const std::vector<std::string>& rowData) {
         std::cerr << "Error opening file for writing\n";
     }
 
-    std::cout << "1 row inserted\n";  // Output success message
+    return 1;  // Return 1 row inserted for row count
 }
 

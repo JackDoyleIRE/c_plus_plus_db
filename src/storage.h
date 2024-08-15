@@ -11,7 +11,7 @@ class Storage {
 public:
     Storage(const string& filename);
 
-    void insertRow(const vector<string>& rowdata);
+    int insertRow(const vector<string>& rowData);  // Return number of rows inserted
     vector<string> readRow(int rowId) const;
 
 private:
