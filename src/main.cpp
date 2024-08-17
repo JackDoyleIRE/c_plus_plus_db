@@ -9,7 +9,8 @@ using std::string;
 using std::ifstream;
 using std::ofstream;
 
-void insertRowsFromFile(Storage& storage, const string& filename) {
+// Insert rows from a file into a specified table
+void insertRowsFromFile(Storage& storage, const string& tableName, const string& filename) {
     ifstream file(filename);
     string line;
     int totalRowsInserted = 0;
@@ -33,9 +34,10 @@ void insertRowsFromFile(Storage& storage, const string& filename) {
                 rowData.push_back(cell);
             }
 
-            // Insert the row using insertRow function
+            // Insert the row into the specified table
             if (!rowData.empty()) {
-                totalRowsInserted += storage.insertRow(rowData);
+                storage.insertRow(tableName, rowData);
+                totalRowsInserted++;
             }
         }
         file.close();
@@ -43,58 +45,62 @@ void insertRowsFromFile(Storage& storage, const string& filename) {
         cout << "Error opening input file.\n";
     }
 
-    cout << totalRowsInserted << " row(s) inserted from " << filename << "\n";
+    cout << totalRowsInserted << " row(s) inserted from " << filename << " into table " << tableName << "\n";
 }
 
-void deleteAllData(Storage& storage, const std::string& filename) {
-    // Count the rows in the file before deleting
-    int rowsBeforeDelete = storage.getTotalRows();
+// Delete all data from the table
+void deleteAllData(Storage& storage, const string& tableName) {
+    // Count the rows before deleting
+    int rowsBeforeDelete = storage.getTotalRows(tableName);
 
-    // Open the file in truncate mode to clear its content
-    ofstream file(filename, std::ios::trunc);  // Truncate the file to clear its content
-    if (file.is_open()) {
-        file.close();
+    // Clear the table
+    storage.clearTable(tableName);
 
-        // Clear the in-memory table
-        storage.clearTable();
-
-        cout << "All data has been deleted from " << filename << "\n";
-        cout << rowsBeforeDelete << " row(s) were deleted.\n";
-    } else {
-        cout << "Error deleting data from " << filename << "\n";
-    }
+    cout << "All data from table \"" << tableName << "\" has been deleted.\n";
+    cout << rowsBeforeDelete << " row(s) were deleted.\n";
 }
 
 int main() {
     Storage storage("data.db");
+
+    // Define a table schema
+    vector<Column> columns = {
+        {"FirstName", "TEXT"},
+        {"LastName", "TEXT"},
+        {"Age", "INTEGER"}
+    };
+
+    // Create a table
+    string tableName = "People";
+    storage.createTable(tableName, columns);
 
     // Welcome message
     cout << "Welcome to c++ db!\n";
 
     while (true) {
         cout << "What would you like to do? (db show, db total, db insert, db delete, quit)\n";
-
+        cout << "> ";
         // Command input
         string command;
         getline(cin, command);
 
         if (command == "db show") {
-            storage.showAllRows();  // Show all rows if user inputs "db show"
+            storage.showTable(tableName);  // Show all rows in the "People" table
         } 
         else if (command == "db total") {
-            int totalRows = storage.getTotalRows();
-            cout << "Total rows: " << totalRows << "\n";  // Show total rows if user inputs "db total"
+            int totalRows = storage.getTotalRows(tableName);
+            cout << "Total rows in table \"" << tableName << "\": " << totalRows << "\n";
         } 
         else if (command == "db insert") {
-            insertRowsFromFile(storage, "input.txt");  // Insert rows from input.txt
+            insertRowsFromFile(storage, tableName, "input.txt");  // Insert rows into the "People" table from input.txt
         } 
         else if (command == "db delete") {
-            cout << "This will delete all data, are you sure you want to continue? Type 'yes' if you want to continue: ";
+            cout << "This will delete all data from table \"" << tableName << "\", are you sure you want to continue? Type 'yes' if you want to continue: ";
             string confirmation;
             getline(cin, confirmation);
 
             if (confirmation == "yes") {
-                deleteAllData(storage, "data.db");  // Pass the storage object and filename
+                deleteAllData(storage, tableName);  // Delete all data from the "People" table
             } else {
                 cout << "Aborted deletion.\n";
             }
@@ -110,3 +116,4 @@ int main() {
 
     return 0;
 }
+
