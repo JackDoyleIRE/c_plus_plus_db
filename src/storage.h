@@ -15,6 +15,7 @@ public:
     vector<string> readRow(int rowId) const;
     void showAllRows() const;  // New method to show all rows
     int getTotalRows() const;  // Add method to return total row count
+    void clearTable(); 
 
 private:
     string filename;

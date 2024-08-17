@@ -1,12 +1,13 @@
 #include "storage.h"
 #include <iostream>
-#include <fstream>  
+#include <fstream>
 
 using std::cout;
 using std::cin;
 using std::vector;
 using std::string;
 using std::ifstream;
+using std::ofstream;
 
 void insertRowsFromFile(Storage& storage, const string& filename) {
     ifstream file(filename);
@@ -45,6 +46,25 @@ void insertRowsFromFile(Storage& storage, const string& filename) {
     cout << totalRowsInserted << " row(s) inserted from " << filename << "\n";
 }
 
+void deleteAllData(Storage& storage, const std::string& filename) {
+    // Count the rows in the file before deleting
+    int rowsBeforeDelete = storage.getTotalRows();
+
+    // Open the file in truncate mode to clear its content
+    ofstream file(filename, std::ios::trunc);  // Truncate the file to clear its content
+    if (file.is_open()) {
+        file.close();
+
+        // Clear the in-memory table
+        storage.clearTable();
+
+        cout << "All data has been deleted from " << filename << "\n";
+        cout << rowsBeforeDelete << " row(s) were deleted.\n";
+    } else {
+        cout << "Error deleting data from " << filename << "\n";
+    }
+}
+
 int main() {
     Storage storage("data.db");
 
@@ -52,7 +72,7 @@ int main() {
     cout << "Welcome to c++ db!\n";
 
     while (true) {
-        cout << "What would you like to do? (db show, db total, db insert, quit)\n";
+        cout << "What would you like to do? (db show, db total, db insert, db delete, quit)\n";
 
         // Command input
         string command;
@@ -68,6 +88,17 @@ int main() {
         else if (command == "db insert") {
             insertRowsFromFile(storage, "input.txt");  // Insert rows from input.txt
         } 
+        else if (command == "db delete") {
+            cout << "This will delete all data, are you sure you want to continue? Type 'yes' if you want to continue: ";
+            string confirmation;
+            getline(cin, confirmation);
+
+            if (confirmation == "yes") {
+                deleteAllData(storage, "data.db");  // Pass the storage object and filename
+            } else {
+                cout << "Aborted deletion.\n";
+            }
+        }
         else if (command == "quit") {
             cout << "Exiting the program...\n";
             break;  // Exit the loop and end the program

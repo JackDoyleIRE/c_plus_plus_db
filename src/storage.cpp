@@ -86,3 +86,8 @@ int Storage::getTotalRows() const {
 
 }
 
+void Storage::clearTable() {
+    table.clear();  // Clear the in-memory table
+}
+
+
