@@ -4,7 +4,7 @@
 <br />
 <div align="center">
 <a href="https://github.com/JackDoyleIRE/c_plus_plus_db">
-  <img src="/images/db_logo.png" alt="Logo" width="80" height="80">
+  <img src="cpp_icon.webp" alt="Logo" width="80" height="80">
 </a>
 <h3 align="center">C++ Database Engine</h3>
   <p align="center">
