@@ -65,7 +65,7 @@ This project is a basic database engine implemented in C++ with the goal of lear
 └── tests/                # Directory for tests
     └── test_storage.cpp  # Unit tests for the Storage class
 
-```plaintext
+```
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 Built With
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
