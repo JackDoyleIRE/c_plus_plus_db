@@ -14,6 +14,23 @@ using std::cerr;
 // Storage constructor
 Storage::Storage(const std::string& filename) : filename(filename) {}
 
+void Storage::createDatabase(const std::string& dbName) {
+    std::ofstream dbFile(dbName + ".db");
+    if (dbFile) {
+        cout << "Database \"" << dbName << "\" created.\n";
+    } else {
+        cerr << "Failed to create database \"" << dbName << "\".\n";
+    }
+}
+
+void Storage::dropDatabase(const std::string& dbName) {
+    if (remove((dbName + ".db").c_str()) == 0) {
+        cout << "Database \"" << dbName << "\" deleted.\n";
+    } else {
+        cerr << "Failed to delete database \"" << dbName << "\".\n";
+    }
+}
+
 // Create a new table with columns (schema)
 void Storage::createTable(const std::string& tableName, const vector<Column>& columns) {
     if (tables.find(tableName) == tables.end()) {
@@ -21,6 +38,15 @@ void Storage::createTable(const std::string& tableName, const vector<Column>& co
         cout << "Table \"" << tableName << "\" created.\n";
     } else {
         cout << "Table \"" << tableName << "\" already exists.\n";
+    }
+}
+
+void Storage::dropTable(const std::string& tableName) {
+    if (tables.erase(tableName)) {
+        cout << "Table \"" << tableName << "\" dropped.\n";
+        // Optional: You might want to also clear it from the file
+    } else {
+        cerr << "Table \"" << tableName << "\" not found.\n";
     }
 }
 

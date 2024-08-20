@@ -43,7 +43,13 @@ class Storage {
 public:
     Storage(const std::string& filename);
 
+    // DDL commands
     void createTable(const std::string& tableName, const std::vector<Column>& columns);  // Create a table
+    void dropTable(const std::string& tableName);  // Drop a specific table
+    void createDatabase(const std::string& databaseName);  // Create a database
+    void dropDatabase(const std::string& databaseName);  // Drop a database
+
+    // DML commands
     void insertRow(const std::string& tableName, const std::vector<std::string>& rowData);  // Insert a row into a specific table
     void showTable(const std::string& tableName) const;  // Display all rows from a specific table
     int getTotalRows(const std::string& tableName) const;  // Get total rows from a specific table
