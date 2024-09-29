@@ -26,20 +26,28 @@ std::vector<std::string> SQLParser::tokenize(const std::string& sql) {
 }
 
 // Parse and execute the SQL command
-void SQLParser::parseAndExecute(const std::string& sql) {
-    std::vector<std::string> tokens = tokenize(sql);
-
-    if (tokens.empty()) {
-        std::cerr << "Error: Empty SQL command.\n";
-        return;
+bool SQLParser::parseAndExecute(const std::string& sql) {
+    if (sql.find("CREATE DATABASE") == 0) {
+        std::string dbName = sql.substr(16);  // Extract the database name
+        if (!dbName.empty()) {
+            storage.createDatabase(dbName);
+            return true;
+        }
+        return false;
+    } else if (sql == "SHOW DATABASES") {
+        storage.showDatabases();
+        return true;
+    } else if (sql.find("USE DATABASE") == 0) {
+        std::string dbName = sql.substr(12);
+        if (!dbName.empty()) {
+            storage.useDatabase(dbName);
+            return true;
+        }
+        return false;
     }
 
-    // Handle CREATE DATABASE command
-    if (tokens.size() >= 3 && tokens[0] == "CREATE" && tokens[1] == "DATABASE") {
-        handleCreateDatabase(tokens);
-    } else {
-        std::cerr << "Error: Unsupported SQL command.\n";
-    }
+    // If the command is not recognized
+    return false;
 }
 
 // Handle the CREATE DATABASE command

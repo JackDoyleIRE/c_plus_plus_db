@@ -13,7 +13,7 @@ public:
     SQLParser(Storage& storage) : storage(storage) {}
 
     // Parse an SQL command and execute it
-    void parseAndExecute(const std::string& sql);
+    bool parseAndExecute(const std::string& sql);
 
 private:
     Storage& storage;

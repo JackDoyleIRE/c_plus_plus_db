@@ -5,10 +5,12 @@
 #include <vector>
 #include <map>
 #include <iostream>
+#include <set>
 
 using std::string;
 using std::vector;
 using std::map;
+using std::set; 
 
 // Define a Column structure to represent a column in the schema
 struct Column {
@@ -48,6 +50,8 @@ public:
     void dropTable(const std::string& tableName);  // Drop a specific table
     void createDatabase(const std::string& databaseName);  // Create a database
     void dropDatabase(const std::string& databaseName);  // Drop a database
+    void showDatabases() const;  // Show all databases
+    void useDatabase(const std::string& databaseName);  // Switch to a specific database
 
     // DML commands
     void insertRow(const std::string& tableName, const std::vector<std::string>& rowData);  // Insert a row into a specific table
@@ -58,6 +62,10 @@ public:
 private:
     std::string filename;
     std::map<std::string, Table> tables;  // A map to hold multiple tables (key: table name, value: Table object)
+
+    // Variables to manage databases
+    set<std::string> databaseNames;  // To store available database names
+    std::string currentDatabase;  // To track the currently selected database
 };
 
 #endif

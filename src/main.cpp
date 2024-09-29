@@ -1,6 +1,7 @@
 #include "storage.h"
 #include <iostream>
 #include <fstream>
+#include "parser.h"
 
 using std::cout;
 using std::cin;
@@ -61,56 +62,33 @@ void deleteAllData(Storage& storage, const string& tableName) {
 }
 
 int main() {
+    // Initialize storage and SQL parser
     Storage storage("data.db");
+    SQLParser sqlParser(storage);  // Pass the storage to the SQL parser
 
-    // Define a table schema
-    vector<Column> columns = {
-        {"FirstName", "TEXT"},
-        {"LastName", "TEXT"},
-        {"Age", "INTEGER"}
-    };
+    // Welcome message and initial instructions
+    cout << "Welcome to the C++ DB!\n";
+    cout << "You can run SQL commands such as:\n";
+    cout << "  - SHOW DATABASES\n";
+    cout << "  - USE DATABASE your_database_name\n";
+    cout << "  - SHOW TABLES\n";
+    cout << "Type 'quit' to exit.\n\n";
 
-    // Create a table
-    string tableName = "People";
-    storage.createTable(tableName, columns);
-
-    // Welcome message
-    cout << "Welcome to c++ db!\n";
-
+    // Main loop to process user commands
     while (true) {
-        cout << "What would you like to do? (db show, db total, db insert, db delete, quit)\n";
         cout << "> ";
-        // Command input
         string command;
         getline(cin, command);
 
-        if (command == "db show") {
-            storage.showTable(tableName);  // Show all rows in the "People" table
-        } 
-        else if (command == "db total") {
-            int totalRows = storage.getTotalRows(tableName);
-            cout << "Total rows in table \"" << tableName << "\": " << totalRows << "\n";
-        } 
-        else if (command == "db insert") {
-            insertRowsFromFile(storage, tableName, "input.txt");  // Insert rows into the "People" table from input.txt
-        } 
-        else if (command == "db delete") {
-            cout << "This will delete all data from table \"" << tableName << "\", are you sure you want to continue? Type 'yes' if you want to continue: ";
-            string confirmation;
-            getline(cin, confirmation);
-
-            if (confirmation == "yes") {
-                deleteAllData(storage, tableName);  // Delete all data from the "People" table
-            } else {
-                cout << "Aborted deletion.\n";
-            }
-        }
-        else if (command == "quit") {
+        // Check for quit command
+        if (command == "quit") {
             cout << "Exiting the program...\n";
-            break;  // Exit the loop and end the program
-        } 
-        else {
-            cout << "Unknown command\n";
+            break;
+        }
+
+        // Pass the command to the SQL parser for execution
+        if (!sqlParser.parseAndExecute(command)) {
+            cout << "Invalid or unsupported SQL command.\n";
         }
     }
 

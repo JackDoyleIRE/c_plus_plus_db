@@ -50,6 +50,26 @@ void Storage::dropTable(const std::string& tableName) {
     }
 }
 
+void Storage::useDatabase(const std::string& databaseName) {
+    if (databaseNames.find(databaseName) == databaseNames.end()) {
+        std::cout << "Database \"" << databaseName << "\" does not exist.\n";
+        return;
+    }
+    currentDatabase = databaseName;
+    std::cout << "Switched to database \"" << databaseName << "\".\n";
+}
+
+void Storage::showDatabases() const {
+    if (databaseNames.empty()) {
+        std::cout << "No databases available.\n";
+        return;
+    }
+    std::cout << "Databases:\n";
+    for (const auto& dbName : databaseNames) {
+        std::cout << "- " << dbName << "\n";
+    }
+}
+
 // Insert a row into a specific table
 void Storage::insertRow(const std::string& tableName, const vector<string>& rowData) {
     if (tables.find(tableName) != tables.end()) {
